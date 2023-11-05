@@ -25,8 +25,40 @@ const CartProvider = ({children}) => {
     }
 
   }
+  const removeFromCart = (id) =>{
+    const newCart = cart.filter((item)=>{
+      return item.id !== id;
+    })
+    setCart(newCart);
+  }
+  const clearCart = () =>{
+    setCart([]);
+  }
+  const increaseCart = (id) =>{
+    const cartItem = cart.find((item)=>{
+      return item.id===id;
+    });
+    addToCart(cartItem,id);
+  }
+  const decreaseCart = (id) =>{
+    const cartItem = cart.find((item)=> item.id===id);
+    if(cartItem){
+      const newCart = cart.map((item)=>{
+        if(item.id===id){
+          return { ...item, amount: cartItem.amount -1}
+        }else{
+          return item;
+        }
+      })
+      setCart(newCart);
+    }
+      if(cartItem.amount<2){
+        removeFromCart(id)
+      }
+    }
+
   console.log(cart);
-    return (<CartContext.Provider value={{cart, addToCart}}>{children}</CartContext.Provider>);
+    return (<CartContext.Provider value={{cart, addToCart, removeFromCart, clearCart, increaseCart, decreaseCart}}>{children}</CartContext.Provider>);
   };
   
   export default CartProvider;
